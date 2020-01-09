@@ -11,6 +11,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc.robot.RobotMap;
@@ -48,7 +49,9 @@ public class Drivetrain extends Subsystem {
     leftMiddleMotor.follow(leftBottomMotor);
     leftTopMotor.follow(leftBottomMotor);
     rightMiddleMotor.follow(rightBottomMotor);
-    rightTopMotor.follow(rightBottomMotor);
+    rightTopMotor.follow(rightBottomMotor);  
+
+    navX = new AHRS(SPI.Port.kMXP); 
   }
 
   @Override
