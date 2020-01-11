@@ -11,15 +11,14 @@ import edu.wpi.first.hal.PDPJNI;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
 public class BrownoutProtector {
-    private static PDPJNI pdp;
+
     private static final Subsystem[] priorityList = {Robot.driveTrain};
     
     public BrownoutProtector() {
-        pdp = new PDPJNI();
     }
 
     public static boolean browningOut() {
-        return pdp.getPDPVoltage(-1) < 7;
+        return PDPJNI.getPDPVoltage(-1) < 7;
     }
 
     public static void priorityLimit() {

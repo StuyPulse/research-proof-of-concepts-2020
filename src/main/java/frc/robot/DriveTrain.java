@@ -14,29 +14,50 @@ import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
-public class DriveTrain implements Subsystem, Brownout{
-  /**
-   * Creates a new DriveTrain.
-   */
-  private CANSparkMax leftFrontMotor;
-  private CANSparkMax leftRearMotor;
-  private CANSparkMax rightFrontMotor;
-  private CANSparkMax rightRearMotor;
+public class DriveTrain implements Subsystem, Brownout {
 
-  private SpeedControllerGroup leftMotors;
-  private SpeedControllerGroup rightMotors;
+  private CANSparkMax leftTopMotor,
+                      leftMiddleMotor,
+                      leftBottomMotor,
+                      rightTopMotor,
+                      rightMiddleMotor,
+                      rightBottomMotor;
 
-  private DifferentialDrive driveTrain;
+  private SpeedControllerGroup leftMotors, rightMotors;
+
+  private DifferentialDrive differentialDrive;
+
   public DriveTrain() {
-    leftFrontMotor = new CANSparkMax(-1, MotorType.kBrushless);
-    leftRearMotor = new CANSparkMax(-1, MotorType.kBrushless);
-    rightFrontMotor = new CANSparkMax(-1, MotorType.kBrushless);
-    rightRearMotor = new CANSparkMax(-1, MotorType.kBrushless);
+    
+    leftTopMotor = new CANSparkMax(2, MotorType.kBrushless);
+    leftMiddleMotor = new CANSparkMax(3, MotorType.kBrushless);
+    leftBottomMotor = new CANSparkMax(1, MotorType.kBrushless);
+    rightTopMotor = new CANSparkMax(6, MotorType.kBrushless);
+    rightMiddleMotor = new CANSparkMax(7, MotorType.kBrushless);
+    rightBottomMotor = new CANSparkMax(5, MotorType.kBrushless);
 
-    leftMotors = new SpeedControllerGroup(leftFrontMotor, leftRearMotor);
-    rightMotors = new SpeedControllerGroup(rightFrontMotor, rightRearMotor);
+    leftTopMotor.setInverted(true);
+    leftMiddleMotor.setInverted(true);
+    leftBottomMotor.setInverted(true);
+    rightTopMotor.setInverted(true);
+    rightMiddleMotor.setInverted(true);
+    rightBottomMotor.setInverted(true);
 
-    driveTrain = new DifferentialDrive(leftMotors, rightMotors);
+    leftTopMotor.setIdleMode(CANSparkMax.IdleMode.kCoast);
+    leftMiddleMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+    leftBottomMotor.setIdleMode(CANSparkMax.IdleMode.kCoast);
+    rightTopMotor.setIdleMode(CANSparkMax.IdleMode.kCoast);
+    rightMiddleMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+    rightBottomMotor.setIdleMode(CANSparkMax.IdleMode.kCoast);
+
+    leftMotors = new SpeedControllerGroup(leftTopMotor, leftMiddleMotor, leftBottomMotor);
+    rightMotors = new SpeedControllerGroup(rightTopMotor, rightMiddleMotor, rightBottomMotor);
+  
+    differentialDrive = new DifferentialDrive(leftMotors, rightMotors);
+  }
+
+  public void tankDrive(double left, double right) {
+    differentialDrive.tankDrive(left, right);
   }
 
   @Override
@@ -46,19 +67,22 @@ public class DriveTrain implements Subsystem, Brownout{
 
   @Override
   public void enableBrownout() {
-    leftFrontMotor.setSmartCurrentLimit(65);
-    leftRearMotor.setSmartCurrentLimit(65);
-    rightFrontMotor.setSmartCurrentLimit(65);
-    rightRearMotor.setSmartCurrentLimit(65);
-
+    leftTopMotor.setSmartCurrentLimit(65);
+    leftMiddleMotor.setSmartCurrentLimit(65);
+    leftBottomMotor.setSmartCurrentLimit(65);
+    rightTopMotor.setSmartCurrentLimit(65);
+    rightMiddleMotor.setSmartCurrentLimit(65);
+    rightBottomMotor.setSmartCurrentLimit(65);
   }
 
   @Override
   public void disableBrownout() {
-    leftFrontMotor.setSmartCurrentLimit(0);
-    leftRearMotor.setSmartCurrentLimit(0);
-    rightFrontMotor.setSmartCurrentLimit(0);
-    rightRearMotor.setSmartCurrentLimit(0);
+    leftTopMotor.setSmartCurrentLimit(0);
+    leftMiddleMotor.setSmartCurrentLimit(0);
+    leftBottomMotor.setSmartCurrentLimit(0);
+    rightTopMotor.setSmartCurrentLimit(0);
+    rightMiddleMotor.setSmartCurrentLimit(0);
+    rightBottomMotor.setSmartCurrentLimit(0);
 
   }
 
