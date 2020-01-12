@@ -48,4 +48,10 @@ public final class Constants {
       DRIVETRAIN_EMPERICAL_RAW_MULTIPLIER * DRIVETRAIN_ENCODERS_INCHES_PER_REVOLUTION
       / (DRIVETRAIN_ENCODERS_PULSES_PER_REVOLUTION * DRIVETRAIN_ENCODERS_FACTOR);
 
+    /******************************************************************************
+     * Motion Profile Constants
+     *****************************************************************************/
+    public static final double MAX_VELOCITY = 18; 
+    //TODO: find this value
+    public static final double MAX_ACCELERATION = -1; 
 }

@@ -93,6 +93,9 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
 
+    m_robotContainer.drivetrain.resetEncoders();
+    m_robotContainer.drivetrain.resetGyroAngle();
+    
     m_robotContainer.updateSmartDashboard();
   }
 
