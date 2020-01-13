@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
-public class DriveTrain implements Subsystem, Brownout {
+public class Drivetrain implements Subsystem, Brownout {
 
   private CANSparkMax leftTopMotor,
                       leftMiddleMotor,
@@ -27,7 +27,7 @@ public class DriveTrain implements Subsystem, Brownout {
 
   private DifferentialDrive differentialDrive;
 
-  public DriveTrain() {
+  public Drivetrain() {
     
     leftTopMotor = new CANSparkMax(2, MotorType.kBrushless);
     leftMiddleMotor = new CANSparkMax(3, MotorType.kBrushless);

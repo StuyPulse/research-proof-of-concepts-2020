@@ -15,11 +15,13 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 public class Acquirer implements Subsystem, Brownout {
   
   private WPI_VictorSPX motor;
+  private boolean limitOn;
 
   public Acquirer() {
     motor = new WPI_VictorSPX(10);
     motor.setInverted(true);
     motor.setNeutralMode(NeutralMode.Brake);
+    limitOn = false;
   }
 
   @Override
@@ -27,16 +29,19 @@ public class Acquirer implements Subsystem, Brownout {
   }
 
   public void setSpeed(double speed) {
-    motor.set(speed);
+    if(limitOn && Math.abs(speed) > .5)
+      motor.set(Math.signum(speed) * .5);
+    else
+      motor.set(speed);
   }
 
   @Override
   public void enableBrownout() {
-    
+    limitOn = true;
   }
 
   @Override
   public void disableBrownout() {
-	
+    limitOn = false;
   }
 }

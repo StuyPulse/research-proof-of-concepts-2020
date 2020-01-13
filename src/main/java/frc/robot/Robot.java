@@ -7,9 +7,12 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.util.Gamepad;
+import frc.util.Gamepad.GamepadSwitchMode;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -19,12 +22,17 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * project.
  */
 public class Robot extends TimedRobot {
+
   private static final String kDefaultAuto = "Default";
   private static final String kCustomAuto = "My Auto";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
-  public static DriveTrain driveTrain;
+  public static Acquirer acquirer;
+  public static Drivetrain drivetrain;
+  public static Lift lift;
+  public static PowerDistributionPanel pdp;
 
+  private static Gamepad gamepad1, gamepad2;
 
   /**
    * This function is run when the robot is first started up and should be
@@ -35,7 +43,12 @@ public class Robot extends TimedRobot {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
-    driveTrain = new DriveTrain();
+    acquirer = new Acquirer();
+    drivetrain = new Drivetrain();
+    lift = new Lift();
+    pdp = new PowerDistributionPanel();
+    gamepad1 = new Gamepad(0, GamepadSwitchMode.SWITCH_X);
+    gamepad2 = new Gamepad(1, GamepadSwitchMode.SWITCH_X);
   }
  
 
@@ -90,6 +103,10 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+    drivetrain.tankDrive(gamepad1.getLeftY(), gamepad2.getRightY());
+    lift.move(gamepad2.getRightY());
+    acquirer.setSpeed(-1 * gamepad2.getRawLeftTriggerAxis() + gamepad2.getRawRightTriggerAxis());
+    
   }
 
   /**

@@ -7,22 +7,63 @@
 
 package frc.robot;
 
-import edu.wpi.first.hal.PDPJNI;
-import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj.Timer;
 
-public class BrownoutProtector {
+public class BrownoutProtector implements Runnable{
 
-    private static final Subsystem[] priorityList = {Robot.driveTrain};
-    
+    private static final Brownout[] priorityList = {Robot.acquirer, Robot.lift, Robot.drivetrain};
+    private static int counterLow;
+    private static int counterHigh;
+    private static int index;
+
     public BrownoutProtector() {
+        counterLow = 0;
+        counterHigh = 0;
+        index = 0;
     }
 
-    public static boolean browningOut() {
-        return PDPJNI.getPDPVoltage(-1) < 7;
+    public static boolean voltageLow() {
+        if(Robot.pdp.getVoltage() < 10) { //10 corresponds to RobotMap.java constant LOW_VOLTAGE
+            counterLow = 0;
+            return false;
+        }
+        counterLow++;
+        if(counterLow >= 3)
+            return true;
+        return false;
     }
 
+    public static boolean voltageSafe() {
+        if(Robot.pdp.getVoltage() > 11) { //11 corresponds to RobotMap.java constant SAFE_VOLTAGE
+            counterHigh = 0;
+            return false;
+        }
+        counterHigh++;
+        if(counterHigh >= 3)
+            return true;
+        return false;
+    }
+
+    //TODO: get rid of all statics
     public static void priorityLimit() {
-        
+        while(true) {
+            while(voltageLow() && (index < priorityList.length)) {
+                priorityList[index].enableBrownout();
+                index++;
+                Timer.delay(.5);
+            }
+            while(voltageSafe() && (index > 0)) {
+                index--;
+                priorityList[index].disableBrownout();
+                Timer.delay(.5);
+            }
+            Timer.delay(.5);
+        }
+    }
+
+    @Override
+    public void run() {
+        priorityLimit();
     }
     
 }
