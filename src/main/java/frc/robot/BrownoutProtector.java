@@ -11,10 +11,10 @@ import edu.wpi.first.wpilibj.Timer;
 
 public class BrownoutProtector implements Runnable{
 
-    private static final Brownout[] priorityList = {Robot.acquirer, Robot.lift, Robot.drivetrain};
-    private static int counterLow;
-    private static int counterHigh;
-    private static int index;
+    private final Brownout[] priorityList = {Robot.acquirer, Robot.lift, Robot.drivetrain};
+    private int counterLow;
+    private int counterHigh;
+    private int index;
 
     public BrownoutProtector() {
         counterLow = 0;
@@ -22,7 +22,7 @@ public class BrownoutProtector implements Runnable{
         index = 0;
     }
 
-    public static boolean voltageLow() {
+    public boolean voltageLow() {
         if(Robot.pdp.getVoltage() < 10) { //10 corresponds to RobotMap.java constant LOW_VOLTAGE
             counterLow = 0;
             return false;
@@ -33,7 +33,7 @@ public class BrownoutProtector implements Runnable{
         return false;
     }
 
-    public static boolean voltageSafe() {
+    public boolean voltageSafe() {
         if(Robot.pdp.getVoltage() > 11) { //11 corresponds to RobotMap.java constant SAFE_VOLTAGE
             counterHigh = 0;
             return false;
@@ -44,8 +44,7 @@ public class BrownoutProtector implements Runnable{
         return false;
     }
 
-    //TODO: get rid of all statics
-    public static void priorityLimit() {
+    public void priorityLimit() {
         while(true) {
             while(voltageLow() && (index < priorityList.length)) {
                 priorityList[index].enableBrownout();
