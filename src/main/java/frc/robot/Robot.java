@@ -55,7 +55,6 @@ public class Robot extends TimedRobot {
     gamepad1 = new Gamepad(0, GamepadSwitchMode.SWITCH_X);
     gamepad2 = new Gamepad(1, GamepadSwitchMode.SWITCH_X);
     solenoid = false;
-    wasPressed = false;
     new Thread(new BrownoutProtector()).start();
     compressor = new Compressor();
   }
@@ -115,17 +114,15 @@ public class Robot extends TimedRobot {
     compressor.start();
     drivetrain.tankDrive(gamepad1.getLeftY(), gamepad1.getRightY());
     lift.move(gamepad2.getRightY());
-    acquirer.setSpeed(-1 * gamepad2.getRawLeftTriggerAxis() + gamepad2.getRawRightTriggerAxis());
-    if(gamepad2.getRawBottomButton() && !wasPressed) {
-      solenoid = !solenoid;
-      wasPressed = gamepad2.getRawBottomButton();
-    }
-    if (solenoid) {
+    if (gamepad2.getRawBottomButton())
+      solenoid = true;
+    if (gamepad2.getRawRightButton())
+      solenoid = false;
+    if (solenoid)
       lift.tiltForward();
-    }
-    else {
+    else 
       lift.tiltBack();
-    }
+    acquirer.setSpeed(-1 * gamepad2.getRawLeftTriggerAxis() + gamepad2.getRawRightTriggerAxis());
   }
 
   /**

@@ -7,20 +7,21 @@
 
 package frc.robot;
 
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
 public class Acquirer implements Subsystem, Brownout {
   
-  private WPI_VictorSPX motor;
+  private CANSparkMax motor;
   private boolean limitOn;
 
   public Acquirer() {
-    motor = new WPI_VictorSPX(10);
+    motor = new CANSparkMax(10, MotorType.kBrushless);
     motor.setInverted(true);
-    motor.setNeutralMode(NeutralMode.Brake);
+    motor.setIdleMode(IdleMode.kBrake);
     limitOn = false;
   }
 
