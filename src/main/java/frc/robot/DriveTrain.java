@@ -10,6 +10,7 @@ package frc.robot;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.Subsystem;
@@ -26,6 +27,8 @@ public class Drivetrain implements Subsystem, Brownout {
   private SpeedControllerGroup leftMotors, rightMotors;
 
   private DifferentialDrive differentialDrive;
+
+  private Solenoid solenoid;
 
   public Drivetrain() {
     
@@ -54,10 +57,20 @@ public class Drivetrain implements Subsystem, Brownout {
     rightMotors = new SpeedControllerGroup(rightTopMotor, rightMiddleMotor, rightBottomMotor);
   
     differentialDrive = new DifferentialDrive(leftMotors, rightMotors);
+
+    solenoid = new Solenoid(0);
   }
 
   public void tankDrive(double left, double right) {
     differentialDrive.tankDrive(left, right);
+  }
+
+  public void setLowGear() {
+    solenoid.set(true);
+  }
+
+  public void setHighGear() {
+    solenoid.set(false);
   }
 
   @Override

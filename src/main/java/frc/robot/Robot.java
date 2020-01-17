@@ -123,6 +123,12 @@ public class Robot extends TimedRobot {
     else 
       lift.tiltBack();
     acquirer.setSpeed(-1 * gamepad2.getRawLeftTriggerAxis() + gamepad2.getRawRightTriggerAxis());
+    if (gamepad1.getRawBottomButton()) {
+      drivetrain.setLowGear();
+    }
+    if (gamepad1.getRawTopButton()) {
+      drivetrain.setHighGear(); 
+    }
   }
 
   /**
