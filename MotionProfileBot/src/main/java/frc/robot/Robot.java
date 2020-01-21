@@ -19,9 +19,9 @@ import frc.robot.commands.DrivetrainDriveCommand;
  * project.
  */
 public class Robot extends TimedRobot {
-  public static Command m_autonomousCommand;
+  private Command m_autonomousCommand;
 
-  public static RobotContainer m_robotContainer;
+  private RobotContainer m_robotContainer;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -33,7 +33,9 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
 
-    m_robotContainer.drivetrain.setDefaultCommand(new DrivetrainDriveCommand());
+    m_robotContainer.getDrivetrain().setDefaultCommand(
+      new DrivetrainDriveCommand(m_robotContainer.getDrivetrain(), () -> m_robotContainer.getDriverLeftAxis(), () -> m_robotContainer.getDriverRightAxis())
+    );
   }
 
   /**
@@ -93,8 +95,9 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
 
-    m_robotContainer.drivetrain.resetEncoders();
-    m_robotContainer.drivetrain.resetGyroAngle();
+    m_robotContainer.getDrivetrain().resetEncoders();
+    m_robotContainer.getDrivetrain().resetGyroAngle();
+    m_robotContainer.getDrivetrain().resetOdometer();
     
     m_robotContainer.updateSmartDashboard();
   }

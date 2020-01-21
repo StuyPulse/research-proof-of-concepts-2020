@@ -22,9 +22,9 @@ import edu.wpi.first.wpilibj2.command.Command;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  public final Drivetrain drivetrain; 
+  private final Drivetrain drivetrain; 
 
-  public final Joystick driverGamepad; 
+  private final Joystick driverGamepad; 
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -61,7 +61,17 @@ public class RobotContainer {
   public void updateSmartDashboard() {
     SmartDashboard.putNumber("Left Distance", drivetrain.getLeftEncoderDistance()); 
     SmartDashboard.putNumber("Right Distance", drivetrain.getRightEncoderDistance()); 
-    SmartDashboard.putNumber("Angle", drivetrain.getGyroAngle()); 
+
+    SmartDashboard.putNumber("Left Velocity", drivetrain.getLeftEncoderVelocity());
+    SmartDashboard.putNumber("Rihgt Velocity", drivetrain.getRightEncoderVelocity()); 
+
+    SmartDashboard.putNumber("Angle (Clockwise)", drivetrain.getGyroAngleClockwise()); 
+
+    SmartDashboard.putString("Pose", drivetrain.getPose().toString());
+  }
+
+  public Drivetrain getDrivetrain() {
+    return drivetrain; 
   }
 
   public double getDriverLeftAxis() {

@@ -1,1 +1,2 @@
-put all paths for motion profiling in this directory 
+put all path files in here 
+they should have the .wpilib.json extension

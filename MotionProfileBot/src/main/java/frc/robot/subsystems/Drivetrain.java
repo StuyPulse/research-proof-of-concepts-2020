@@ -15,21 +15,26 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Drivetrain extends SubsystemBase {
   
-  private WPI_VictorSPX leftTopMotor;
-  private WPI_VictorSPX leftMiddleMotor;
-  private WPI_TalonSRX leftBottomMotor;
-  private WPI_VictorSPX rightTopMotor;
-  private WPI_VictorSPX rightMiddleMotor;
-  private WPI_TalonSRX rightBottomMotor;
+  private final WPI_VictorSPX leftTopMotor;
+  private final WPI_VictorSPX leftMiddleMotor;
+  private final WPI_TalonSRX leftBottomMotor;
+  private final WPI_VictorSPX rightTopMotor;
+  private final WPI_VictorSPX rightMiddleMotor;
+  private final WPI_TalonSRX rightBottomMotor;
 
-  private DifferentialDrive differentialDrive; 
+  private final DifferentialDrive differentialDrive;
+  private final DifferentialDriveOdometry odometry;
 
-  private AHRS navX; 
+  private final AHRS navX;
 
   public Drivetrain() {
     /// Left Motors
@@ -48,6 +53,13 @@ public class Drivetrain extends SubsystemBase {
     rightMiddleMotor.follow(rightBottomMotor);
     rightTopMotor.follow(rightBottomMotor);
 
+    leftTopMotor.setInverted(true);
+    leftMiddleMotor.setInverted(true);
+    leftBottomMotor.setInverted(true);
+    rightTopMotor.setInverted(true);
+    rightMiddleMotor.setInverted(true);
+    rightBottomMotor.setInverted(true);
+
     /// Brake Mode
     leftTopMotor.setNeutralMode(NeutralMode.Brake);
     leftMiddleMotor.setNeutralMode(NeutralMode.Brake);
@@ -56,10 +68,11 @@ public class Drivetrain extends SubsystemBase {
     rightMiddleMotor.setNeutralMode(NeutralMode.Brake);
     rightBottomMotor.setNeutralMode(NeutralMode.Brake);
 
-    leftBottomMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0); 
+    leftBottomMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
     rightBottomMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
-    
-    differentialDrive = new DifferentialDrive(leftBottomMotor, rightBottomMotor); 
+
+    differentialDrive = new DifferentialDrive(leftBottomMotor, rightBottomMotor);
+    odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getGyroAngleCounterClockwise()));
 
     navX = new AHRS(SPI.Port.kMXP);
   }
@@ -67,18 +80,35 @@ public class Drivetrain extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    odometry.update(Rotation2d.fromDegrees(getGyroAngleCounterClockwise()), getLeftEncoderDistance(), getRightEncoderDistance());
   }
 
   public double getLeftEncoderDistance() {
-    return leftBottomMotor.getSelectedSensorPosition(0) * Constants.DRIVETRAIN_RAW_MULTIPLIER;
+    return leftBottomMotor.getSelectedSensorPosition(0) * Constants.DRIVETRAIN_RAW_MULTIPLIER / 12.0;
   }
 
   public double getRightEncoderDistance() {
-    return -1 * rightBottomMotor.getSelectedSensorPosition(0) * Constants.DRIVETRAIN_RAW_MULTIPLIER;
+    return -1 * rightBottomMotor.getSelectedSensorPosition(0) * Constants.DRIVETRAIN_RAW_MULTIPLIER / 12.0;
   }
 
   public double getEncoderDistance() {
-    return Math.max(getLeftEncoderDistance(), getRightEncoderDistance());  
+    return Math.max(getLeftEncoderDistance(), getRightEncoderDistance());
+  }
+
+  public double getLeftEncoderVelocity() {
+    // raw units in ticks / ms
+    // scaled units in ft / sec
+    return leftBottomMotor.getSelectedSensorVelocity(0) * (Constants.DRIVETRAIN_RAW_MULTIPLIER / 12.0) * 1000;
+  }
+
+  public double getRightEncoderVelocity() {
+    // raw units in ticks / ms
+    // scaled units in ft / sec
+    return rightBottomMotor.getSelectedSensorVelocity(0) * (Constants.DRIVETRAIN_RAW_MULTIPLIER / 12.0) * 1000;
+  }
+
+  public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+    return new DifferentialDriveWheelSpeeds(getLeftEncoderVelocity(), getRightEncoderVelocity());
   }
 
   public void resetEncoders() {
@@ -86,7 +116,7 @@ public class Drivetrain extends SubsystemBase {
     rightBottomMotor.setSelectedSensorPosition(0, 0, 100);
   }
 
-  public void tankDrive(double left, double right) {
+  public void tankDrive(final double left, final double right) {
     differentialDrive.tankDrive(left, right, false);
   }
 
@@ -94,12 +124,25 @@ public class Drivetrain extends SubsystemBase {
     tankDrive(0, 0);
   }
 
-  public double getGyroAngle() {
+  public double getGyroAngleClockwise() {
     return navX.getAngle();
+  }
+
+  public double getGyroAngleCounterClockwise() {
+    return 360.0 - getGyroAngleClockwise();
   }
 
   public void resetGyroAngle() {
     navX.reset();
+  }
+
+  public Pose2d getPose() {
+    // bad naming: returns back given units 
+    return odometry.getPoseMeters(); 
+  }
+
+  public void resetOdometer() {
+    odometry.resetPosition(new Pose2d(), Rotation2d.fromDegrees(getGyroAngleCounterClockwise()));
   }
 
 }

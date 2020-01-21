@@ -7,6 +7,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants.  This class should not be used for any other purpose.  All constants should be
@@ -26,13 +29,13 @@ public final class Constants {
     /**************************************************************************
      * Drivetrain Motor Ports
      *************************************************************************/
-    public static final int DRIVETRAIN_LEFT_TOP_MOTOR_PORT = 3;
-    public static final int DRIVETRAIN_LEFT_MIDDLE_MOTOR_PORT = 2;
-    public static final int DRIVETRAIN_LEFT_BOTTOM_MOTOR_PORT = 1;
+    public static final int DRIVETRAIN_RIGHT_TOP_MOTOR_PORT = 3; // 4
+    public static final int DRIVETRAIN_RIGHT_MIDDLE_MOTOR_PORT = 2; // 5 
+    public static final int DRIVETRAIN_RIGHT_BOTTOM_MOTOR_PORT = 1; //6 
 
-    public static final int DRIVETRAIN_RIGHT_TOP_MOTOR_PORT = 6;
-    public static final int DRIVETRAIN_RIGHT_MIDDLE_MOTOR_PORT = 5;
-    public static final int DRIVETRAIN_RIGHT_BOTTOM_MOTOR_PORT = 4;
+    public static final int DRIVETRAIN_LEFT_TOP_MOTOR_PORT = 6; // 1
+    public static final int DRIVETRAIN_LEFT_MIDDLE_MOTOR_PORT = 5; // 3
+    public static final int DRIVETRAIN_LEFT_BOTTOM_MOTOR_PORT = 4; // 2
 
     /******************************************************************************
      * Drivetrain Encoder/Movement Constants
@@ -51,7 +54,21 @@ public final class Constants {
     /******************************************************************************
      * Motion Profile Constants
      *****************************************************************************/
-    public static final double MAX_VELOCITY = 18; 
-    //TODO: find this value
-    public static final double MAX_ACCELERATION = -1; 
+    public static final double WIDTH = -1;
+    public static final DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(WIDTH);  
+
+    // TODO: change ramsete constants to work with meters
+    // https://docs.wpilib.org/en/latest/docs/software/advanced-control/trajectories/ramsete.html#constructing-the-ramsete-controller-object
+    public static final double kRamseteB = 2; 
+    public static final double kRamseteZeta = 0.7; 
+    
+    // TODO: enter in the constants 
+    public static final double ks = -1; 
+    public static final double kv = -1; 
+    public static final double ka = -1; 
+    public static final SimpleMotorFeedforward MOTOR_FEEDFORWARD = new SimpleMotorFeedforward(ks, kv, ka); 
+    
+    public static final double kp = -1; 
+    public static final double ki = -1; 
+    public static final double kd = -1; 
 }
