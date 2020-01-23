@@ -24,17 +24,17 @@ import frc.robot.Constants;
 
 public class Drivetrain extends SubsystemBase {
   
-  private final WPI_VictorSPX leftTopMotor;
-  private final WPI_VictorSPX leftMiddleMotor;
-  private final WPI_TalonSRX leftBottomMotor;
-  private final WPI_VictorSPX rightTopMotor;
-  private final WPI_VictorSPX rightMiddleMotor;
-  private final WPI_TalonSRX rightBottomMotor;
+  private WPI_VictorSPX leftTopMotor;
+  private WPI_VictorSPX leftMiddleMotor;
+  private WPI_TalonSRX leftBottomMotor;
+  private WPI_VictorSPX rightTopMotor;
+  private WPI_VictorSPX rightMiddleMotor;
+  private WPI_TalonSRX rightBottomMotor;
 
-  private final DifferentialDrive differentialDrive;
-  private final DifferentialDriveOdometry odometry;
+  private DifferentialDrive differentialDrive;
+  private DifferentialDriveOdometry odometry;
 
-  private final AHRS navX;
+  private AHRS navX;
 
   public Drivetrain() {
     /// Left Motors
@@ -70,11 +70,11 @@ public class Drivetrain extends SubsystemBase {
 
     leftBottomMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
     rightBottomMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
+    
+    navX = new AHRS(SPI.Port.kMXP);
 
     differentialDrive = new DifferentialDrive(leftBottomMotor, rightBottomMotor);
     odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getGyroAngleCounterClockwise()));
-
-    navX = new AHRS(SPI.Port.kMXP);
   }
 
   @Override
@@ -84,11 +84,11 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public double getLeftEncoderDistance() {
-    return leftBottomMotor.getSelectedSensorPosition(0) * Constants.DRIVETRAIN_RAW_MULTIPLIER / 12.0;
+    return leftBottomMotor.getSelectedSensorPosition(0) * Constants.DRIVETRAIN_METERS_RAW_MULTIPLIER;
   }
 
   public double getRightEncoderDistance() {
-    return -1 * rightBottomMotor.getSelectedSensorPosition(0) * Constants.DRIVETRAIN_RAW_MULTIPLIER / 12.0;
+    return -1 * rightBottomMotor.getSelectedSensorPosition(0) * Constants.DRIVETRAIN_METERS_RAW_MULTIPLIER;
   }
 
   public double getEncoderDistance() {
@@ -98,13 +98,13 @@ public class Drivetrain extends SubsystemBase {
   public double getLeftEncoderVelocity() {
     // raw units in ticks / ms
     // scaled units in ft / sec
-    return leftBottomMotor.getSelectedSensorVelocity(0) * (Constants.DRIVETRAIN_RAW_MULTIPLIER / 12.0) * 1000;
+    return leftBottomMotor.getSelectedSensorVelocity(0) * Constants.DRIVETRAIN_METERS_RAW_MULTIPLIER* 10;
   }
 
   public double getRightEncoderVelocity() {
     // raw units in ticks / ms
     // scaled units in ft / sec
-    return rightBottomMotor.getSelectedSensorVelocity(0) * (Constants.DRIVETRAIN_RAW_MULTIPLIER / 12.0) * 1000;
+    return -1 * rightBottomMotor.getSelectedSensorVelocity(0) * Constants.DRIVETRAIN_METERS_RAW_MULTIPLIER * 10;
   }
 
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
@@ -116,7 +116,7 @@ public class Drivetrain extends SubsystemBase {
     rightBottomMotor.setSelectedSensorPosition(0, 0, 100);
   }
 
-  public void tankDrive(final double left, final double right) {
+  public void tankDrive(double left, double right) {
     differentialDrive.tankDrive(left, right, false);
   }
 
@@ -129,7 +129,7 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public double getGyroAngleCounterClockwise() {
-    return 360.0 - getGyroAngleClockwise();
+    return -getGyroAngleClockwise();
   }
 
   public void resetGyroAngle() {

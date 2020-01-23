@@ -45,11 +45,14 @@ public final class Constants {
     public static final int DRIVETRAIN_ENCODERS_FACTOR = 4;
     public static final double DRIVETRAIN_ENCODERS_INCHES_PER_REVOLUTION = Math.PI * DRIVETRAIN_WHEEL_DIAMETER;
 
-    private static final double DRIVETRAIN_EMPERICAL_RAW_MULTIPLIER = (63.7 / 63.0) * 61.1 / ((463.544 + 461.814) / 2.0);
+    private static final double DRIVETRAIN_INCHES_EMPERICAL_RAW_MULTIPLIER = (63.7 / 63.0) * 61.1 / ((463.544 + 461.814) / 2.0);
     
-    public static final double DRIVETRAIN_RAW_MULTIPLIER = 
-      DRIVETRAIN_EMPERICAL_RAW_MULTIPLIER * DRIVETRAIN_ENCODERS_INCHES_PER_REVOLUTION
+    public static final double DRIVETRAIN_INCHES_RAW_MULTIPLIER = 
+      DRIVETRAIN_INCHES_EMPERICAL_RAW_MULTIPLIER * DRIVETRAIN_ENCODERS_INCHES_PER_REVOLUTION
       / (DRIVETRAIN_ENCODERS_PULSES_PER_REVOLUTION * DRIVETRAIN_ENCODERS_FACTOR);
+
+    public static final double DRIVETRAIN_METERS_RAW_MULTIPLIER = 
+      DRIVETRAIN_INCHES_RAW_MULTIPLIER / 39.3701; 
 
     /******************************************************************************
      * Motion Profile Constants
@@ -57,7 +60,7 @@ public final class Constants {
     public static final double WIDTH = -1;
     public static final DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(WIDTH);  
 
-    // TODO: change ramsete constants to work with meters
+    // TODO: change ramsete constants to work with feet
     // https://docs.wpilib.org/en/latest/docs/software/advanced-control/trajectories/ramsete.html#constructing-the-ramsete-controller-object
     public static final double kRamseteB = 2; 
     public static final double kRamseteZeta = 0.7; 

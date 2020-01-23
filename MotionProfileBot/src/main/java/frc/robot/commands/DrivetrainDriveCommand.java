@@ -17,13 +17,14 @@ public class DrivetrainDriveCommand extends CommandBase {
    * Creates a new DrivetrainDriveCommand.
    */
 
-  Drivetrain drivetrain; 
+  private Drivetrain drivetrain; 
 
-  DoubleSupplier left, right; 
+  private DoubleSupplier left, right; 
 
   public DrivetrainDriveCommand(Drivetrain drivetrain, DoubleSupplier left, DoubleSupplier right) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(drivetrain);
+    this.drivetrain = drivetrain; 
 
     this.left = left; 
     this.right = right; 

@@ -26,15 +26,16 @@ public class DrivetrainFollowPathCommand extends CommandBase {
    * This Command is a wrapper for WPIlib's Ramsete Command 
    */
 
-  Drivetrain drivetrain; 
+  private Drivetrain drivetrain; 
 
-  Trajectory trajectory;
+  private Trajectory trajectory;
   
-  RamseteCommand ramsete; 
+  private RamseteCommand ramsete; 
 
   public DrivetrainFollowPathCommand(Drivetrain drivetrain, String path) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(drivetrain);
+    this.drivetrain = drivetrain; 
 
     try {
       trajectory = TrajectoryUtil.fromPathweaverJson(Paths.get("/home/lvuser/deploy/paths/" + path + ".wpilib.json"));
