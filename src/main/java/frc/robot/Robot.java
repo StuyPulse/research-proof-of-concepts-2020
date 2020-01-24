@@ -10,6 +10,8 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
+
 import com.revrobotics.*;
 import edu.wpi.first.wpilibj.I2C.Port;
 
@@ -26,6 +28,18 @@ public class Robot extends TimedRobot {
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   private ColorSensorV3 colorsensor;
+  
+private final ColorMatch m_colorMatcher = new ColorMatch();
+
+private final Color kCyanTarget = ColorMatch.makeColor(0.2, 0.56, 0.3);
+private final Color kGreenTarget = ColorMatch.makeColor(0.25, 0.65, 0.17);
+private final Color kRedTarget = ColorMatch.makeColor(0.60, 0.35, 0.1);
+private final Color kYellowTarget = ColorMatch.makeColor(0.30, 0.50, 0.1);
+private Color previousColor = null;
+private int colorCount = 0;
+private int rotationsCount = 0;
+
+  
 
   /**
    * This function is run when the robot is first started up and should be
@@ -37,6 +51,11 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
     colorsensor = new ColorSensorV3(Port.kOnboard);
+
+    m_colorMatcher.addColorMatch(kCyanTarget);
+    m_colorMatcher.addColorMatch(kGreenTarget);
+    m_colorMatcher.addColorMatch(kRedTarget);
+    m_colorMatcher.addColorMatch(kYellowTarget);
   }
 
   /**
@@ -49,10 +68,49 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    Color detectedColor = colorsensor.getColor();
+
+    String colorString;
+    ColorMatchResult match = m_colorMatcher.matchClosestColor(detectedColor);
+    //motor settings = 1
+    if (match.color == kCyanTarget) {
+      colorString = "Cyan";
+    } else if (match.color == kRedTarget) {
+      colorString = "Red";
+    } else if (match.color == kGreenTarget) {
+      colorString = "Green";
+    } else if (match.color == kYellowTarget) {
+      colorString = "Yellow";
+    } else {
+      colorString = "Unknown";
+    }
+
+    if (previousColor != match.color) {
+      colorCount += 1;
+    }
+    if (colorCount == 8) {
+      rotationsCount +=1;
+      colorCount = 0;
+      //MOtorSettings = 0
+    }
+
+    previousColor = match.color;
+
     SmartDashboard.putNumber("infared", colorsensor.getIR());
     SmartDashboard.putNumber("blue", colorsensor.getBlue());
     SmartDashboard.putNumber("green", colorsensor.getGreen());
     SmartDashboard.putNumber("red", colorsensor.getRed());
+
+    SmartDashboard.putNumber("Red", detectedColor.red);
+    SmartDashboard.putNumber("Green", detectedColor.green);
+    SmartDashboard.putNumber("Blue", detectedColor.blue);
+    SmartDashboard.putNumber("Confidence", match.confidence);
+    SmartDashboard.putString("Detected Color", colorString);
+    SmartDashboard.putNumber("Rotations Amount", rotationsCount);
+    SmartDashboard.putNumber("Color Count", colorCount);
+
+
+
   }
 
   /**
@@ -70,7 +128,6 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     m_autoSelected = m_chooser.getSelected();
     // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
-    System.out.println("Auto selected: " + m_autoSelected);
   }
 
   /**
@@ -80,7 +137,7 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() {
     switch (m_autoSelected) {
       case kCustomAuto:
-        // Put custom auto code here
+              // Put custom auto code here
         break;
       case kDefaultAuto:
       default:
