@@ -7,10 +7,13 @@
 
 package frc.robot;
 
+
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.commands.DrivetrainFollowPathCommand;
 import frc.robot.subsystems.Drivetrain;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -26,6 +29,8 @@ public class RobotContainer {
 
   private final Joystick driverGamepad; 
 
+  private final SendableChooser<Command> chooser;
+
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
@@ -36,6 +41,10 @@ public class RobotContainer {
 
     // Configure the button bindings
     configureButtonBindings();
+
+    chooser = new SendableChooser<>();
+    addAutonomousCommands();
+    SmartDashboard.putData(chooser);
   }
 
   /**
@@ -47,6 +56,11 @@ public class RobotContainer {
   private void configureButtonBindings() {
   }
 
+  private void addAutonomousCommands() {
+    // TODO: add various routines
+    chooser.addOption("Motion Profile", new DrivetrainFollowPathCommand(drivetrain, "dummy"));
+  }
+
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -55,7 +69,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return null;
+    return chooser.getSelected();
   }
 
   public void updateSmartDashboard() {
