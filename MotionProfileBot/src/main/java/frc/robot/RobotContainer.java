@@ -77,7 +77,7 @@ public class RobotContainer {
     SmartDashboard.putNumber("Right Distance", drivetrain.getRightEncoderDistance()); 
 
     SmartDashboard.putNumber("Left Velocity", drivetrain.getLeftEncoderVelocity());
-    SmartDashboard.putNumber("Rihgt Velocity", drivetrain.getRightEncoderVelocity()); 
+    SmartDashboard.putNumber("Right Velocity", drivetrain.getRightEncoderVelocity()); 
 
     SmartDashboard.putNumber("Angle (Clockwise)", drivetrain.getGyroAngleClockwise()); 
 
