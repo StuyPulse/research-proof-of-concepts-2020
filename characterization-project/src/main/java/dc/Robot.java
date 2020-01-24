@@ -20,6 +20,7 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
+import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.SPI;
 
@@ -36,7 +37,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends TimedRobot {
 
   static private double WHEEL_DIAMETER = 0.1524;
-  static private double ENCODER_PULSE_PER_REV = 512;
+  static private double ENCODER_EDGES_PER_REV = 512;
   static private int PIDIDX = 0;
 
   Joystick stick;
@@ -128,26 +129,23 @@ public class Robot extends TimedRobot {
       DRIVETRAIN_INCHES_EMPERICAL_RAW_MULTIPLIER * DRIVETRAIN_ENCODERS_INCHES_PER_REVOLUTION
       / (DRIVETRAIN_ENCODERS_PULSES_PER_REVOLUTION * DRIVETRAIN_ENCODERS_FACTOR);
 
-    double DRIVETRAIN_METERS_RAW_MULTIPLIER = 
+    double encoderConstant = 
       DRIVETRAIN_INCHES_RAW_MULTIPLIER / 39.3701; 
 
-    /*
-    double encoderConstant =
-        (1 / ENCODER_PULSE_PER_REV) * WHEEL_DIAMETER * Math.PI;
-    */
-
-    double encoderConstant = DRIVETRAIN_METERS_RAW_MULTIPLIER;
-    
-    leftMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder,
-                                                PIDIDX, 10);
+    leftMaster.configSelectedFeedbackSensor(
+        FeedbackDevice.QuadEncoder,
+        PIDIDX, 10
+    );
     leftEncoderPosition = ()
         -> leftMaster.getSelectedSensorPosition(PIDIDX) * encoderConstant;
     leftEncoderRate = ()
         -> leftMaster.getSelectedSensorVelocity(PIDIDX) * encoderConstant *
                10;
 
-    rightMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder,
-                                                 PIDIDX, 10);
+    rightMaster.configSelectedFeedbackSensor(
+        FeedbackDevice.QuadEncoder,
+        PIDIDX, 10
+    );
     rightEncoderPosition = ()
         -> rightMaster.getSelectedSensorPosition(PIDIDX) * encoderConstant;
     rightEncoderRate = ()

@@ -1,2 +1,0 @@
-put all path files in here 
-they should have the .wpilib.json extension

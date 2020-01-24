@@ -57,7 +57,7 @@ public final class Constants {
     /******************************************************************************
      * Motion Profile Constants
      *****************************************************************************/
-    public static final double WIDTH = -1;
+    public static final double WIDTH = 0.5900928;
     public static final DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(WIDTH);  
 
     // TODO: change ramsete constants to work with feet
@@ -66,12 +66,12 @@ public final class Constants {
     public static final double kRamseteZeta = 0.7; 
     
     // TODO: enter in the constants 
-    public static final double ks = -1; 
-    public static final double kv = -1; 
-    public static final double ka = -1; 
+    public static final double ks = 1.95; 
+    public static final double kv = 1.81; 
+    public static final double ka = 0.876; 
     public static final SimpleMotorFeedforward MOTOR_FEEDFORWARD = new SimpleMotorFeedforward(ks, kv, ka); 
     
-    public static final double kp = -1; 
-    public static final double ki = -1; 
-    public static final double kd = -1; 
+    public static final double kp = 0.000668; 
+    public static final double ki = 0; 
+    public static final double kd = 0.000334; 
 }
