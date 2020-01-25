@@ -58,7 +58,11 @@ public class RobotContainer {
 
   private void addAutonomousCommands() {
     // TODO: add various routines
-    chooser.addOption("Motion Profile", new DrivetrainFollowPathCommand(drivetrain, "dummy"));
+    chooser.addOption("Straight", new DrivetrainFollowPathCommand(drivetrain, "Straight"));
+    chooser.addOption("Quad", new DrivetrainFollowPathCommand(drivetrain, "Quad"));
+    chooser.addOption("Snake", new DrivetrainFollowPathCommand(drivetrain, "Snake")); 
+    chooser.addOption("Double", new DrivetrainFollowPathCommand(drivetrain, "Double"));
+    chooser.addOption("Circle", new DrivetrainFollowPathCommand(drivetrain, "Circle"));
   }
 
 

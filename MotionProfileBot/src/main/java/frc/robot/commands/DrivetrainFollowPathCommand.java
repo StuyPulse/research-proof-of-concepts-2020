@@ -38,7 +38,7 @@ public class DrivetrainFollowPathCommand extends CommandBase {
     this.drivetrain = drivetrain; 
 
     try {
-      trajectory = TrajectoryUtil.fromPathweaverJson(Paths.get("/home/lvuser/deploy/paths/" + path + ".wpilib.json"));
+      trajectory = TrajectoryUtil.fromPathweaverJson(Paths.get("/home/lvuser/deploy/output/" + path + ".wpilib.json"));
     }catch(IOException e) {
       end(false); 
     }
