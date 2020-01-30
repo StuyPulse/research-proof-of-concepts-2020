@@ -9,6 +9,7 @@ package frc.robot;
 
 import frc.robot.Gamepad;
 
+import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -28,22 +29,34 @@ public class Robot extends TimedRobot {
   private static final String kCustomAuto = "My Auto";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
-
+  
   public CANSparkMax shooterMotor;
+  public CANEncoder shooterEncoder;
   public Gamepad operatorGamepad;
-
   public double currentSpeed;
-  public int shooterEncoderMaxSpeed;
 
   public Robot() {
     shooterMotor = new CANSparkMax(-1, MotorType.kBrushless);
-    operatorGamepad = new Gamepad(0); 
+    shooterEncoder = new CANEncoder(shooterMotor);
+    operatorGamepad = new Gamepad(0);
+    
     currentSpeed = 1.0;
+  }
+
+  public void setSpeed(double speed) {
+    shooterMotor.set(speed);
+    currentSpeed = speed;
   }
 
   public void stop() {
     shooterMotor.set(0.0);
   }
+
+  public double getMotorSpeedInRPM() {
+    return shooterEncoder.getVelocity();
+  }
+
+  
 
   /**
    * This function is run when the robot is first started up and should be
@@ -110,6 +123,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     shooterMotor.set(operatorGamepad.getRawLeftTriggerAxis());
+    System.out.println(getMotorSpeedInRPM());
   }
 
   /**
