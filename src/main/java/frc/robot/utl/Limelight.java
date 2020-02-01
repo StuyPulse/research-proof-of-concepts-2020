@@ -172,7 +172,7 @@ public class Limelight {
 
         double X_SHIFT = SmartDashboard.getNumber("X_SHIFT", 1000);
         if(X_SHIFT > 694) SmartDashboard.putNumber("X_SHIFT", X_ANGLE_SHIFT);
-        return xAngleEntry.getDouble(0) + X_SHIFT;
+        return xAngleEntry.getDouble(0);
     }
 
     // Vertical Offset From Crosshair To Target (-20.5 degrees to 20.5 degrees)
@@ -327,6 +327,22 @@ public class Limelight {
      */
     public static double getRawCrosshairY(int crosshair) {
         return table.getEntry("cy" + crosshair).getDouble(0);
+    }
+
+    public static double[] getCoords(){
+        return table.getEntry("tcornxy").getDoubleArray(new double[0]);
+    }
+    public static double[][] getVertices(){
+        double [][] data = new double[2][];
+        double[] cvt = getCoords();
+        int numCoords = cvt.length/2;
+        data[0] = new double[numCoords];
+        data[1] = new double[numCoords];
+        for(int i  =0; i < cvt.length/2 ;i++){
+            data[0][i] = cvt[i];
+            data[1][i] = cvt[i+1];
+        }
+        return data;
     }
 
     /* Custom Grip Values */

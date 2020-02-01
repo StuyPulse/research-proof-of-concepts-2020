@@ -8,10 +8,15 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.commands.DriveCommand;
-import frc.robot.subsystems.Drivetrain;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.RampUp;
+import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Shooter;
+import frc.robot.utl.Limelight;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -21,37 +26,53 @@ import edu.wpi.first.wpilibj2.command.Command;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final Drivetrain m_drivetrain = new Drivetrain();
-
-  private final DriveCommand m_autoCommand = new DriveCommand(m_drivetrain);
-
+  public final Drivetrain m_drivetrain;
+  public final Shooter shooter;
+  public final Joystick controller;
+  public final Joystick Operator; 
 
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    // Configure the button bindings
+    m_drivetrain = new Drivetrain();
+    shooter = new Shooter();
+    controller = new Joystick(0);
+    Operator = new Joystick(1);
     configureButtonBindings();
   }
+  
+  public void setupShuffleboard(){
+    SmartDashboard.putNumber("Angle_P", 0.2);
+    SmartDashboard.putNumber("Angle_I", 0);
+    SmartDashboard.putNumber("Angle_D", 0.1);
+  }
+  public double getForward(){
+    double value = controller.getRawAxis(1);
+    return -Math.signum(value)*Math.pow(value,2);
+  }
 
+  public double getTurn(){
+    double value = controller.getRawAxis(4);
+    return Math.signum(value)*Math.pow(value,2);
+  }
+
+  public double getCVTurn(){
+    return Math.signum(Limelight.getTargetXAngle())*Math.sqrt(Math.abs(Limelight.getTargetXAngle()));
+  }
+
+  public Command getAutonomousCommand() {
+    return null;
+  }
   /**
    * Use this method to define your button->command mappings.  Buttons can be created by
    * instantiating a {@link GenericHID} or one of its subclasses ({@link
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
-  private void configureButtonBindings() {
+  public void configureButtonBindings() {
+    new JoystickButton(Operator, 2).whileHeld(new RampUp(shooter));
   }
 
-
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  public Command getAutonomousCommand() {
-    // An ExampleCommand will run in autonomous
-    return m_autoCommand;
-  }
 }
