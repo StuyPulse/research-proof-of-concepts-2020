@@ -338,9 +338,9 @@ public class Limelight {
         int numCoords = cvt.length/2;
         data[0] = new double[numCoords];
         data[1] = new double[numCoords];
-        for(int i  =0; i < cvt.length/2 ;i++){
-            data[0][i] = cvt[i];
-            data[1][i] = cvt[i+1];
+        for(int i =0; i < cvt.length-1 ;i+=2){
+            data[0][i/2] = cvt[i];
+            data[1][i/2] = cvt[i+1];
         }
         return data;
     }

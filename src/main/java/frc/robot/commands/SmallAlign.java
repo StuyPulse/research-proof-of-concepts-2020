@@ -16,7 +16,7 @@ import frc.robot.utl.Limelight.LEDMode;
  * explicitly for pedagogical purposes - actual code should inline a command this simple with {@link
  * edu.wpi.first.wpilibj2.command.RunCommand}.
  */
-public class DriveCommand extends CommandBase {
+public class SmallAlign extends CommandBase {
 
   /**
    * Creates a new DefaultDrive.
@@ -27,7 +27,8 @@ public class DriveCommand extends CommandBase {
    */
   PIDController turnController;
   PIDController moveController;
-  public DriveCommand() {
+  int[]avg = new int[10];
+  public SmallAlign() {
     addRequirements(Robot.m_robotContainer.m_drivetrain);
   }
   @Override
@@ -48,25 +49,6 @@ public class DriveCommand extends CommandBase {
 
   @Override
   public void execute() {
-    Limelight.setLEDMode(LEDMode.FORCE_ON);
-    if(Robot.m_robotContainer.controller.getRawButton(1)){
-      // Limelight.setLEDMode(LEDMode.FORCE_OFF);
-      Robot.m_robotContainer.m_drivetrain.arcadeDrive(
-        Robot.m_robotContainer.getForward(),
-        Robot.m_robotContainer.getTurn()
-      );
-    }else{
-      double turn = -turnController.calculate(Limelight.getTargetXAngle());
-      double move = moveController.calculate(CVFuncs.getDistanceToTarget());
-    
-      // System.out.println(turn);
-    // System.out.println(turnController.getVelocityError());
-    //System.out.println(move);
-    if(Math.abs(turn) < 1 && Math.abs(turn) > 0.001 && !turnController.atSetpoint()){
-      turn = Math.signum(turn) * Math.sqrt(Math.sqrt(Math.abs(turn)));
-    }
-      Robot.m_robotContainer.m_drivetrain.arcadeDrive(Robot.m_robotContainer.getForward(),turn);
-    }
-    Robot.m_robotContainer.m_drivetrain.cvtLimelightToCV();
+      Robot.m_robotContainer.m_drivetrain.arcadeDrive(Robot.m_robotContainer.getForward(),CVFuncs.txOffset());
   }
 }

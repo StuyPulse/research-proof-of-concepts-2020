@@ -17,13 +17,27 @@ import org.opencv.core.*;
 public class CVFuncs {
     public static double txOffset(){
         double[][] data = Limelight.getVertices();
+        double srx = 0;
+        double slx = 0;
         if(data.length > 0 && data[0].length > 3){
+            double middleX = (data[0][3] + data[0][2])/2;
+            double rightDistortion = data[0][1] - middleX;
+            double leftDistortion = data[0][0] - middleX;
+            //length of top
             double s1x = data[0][1] - data[0][0];
-            double slx = data[0][3] - data[0][0];
-            double srx = data[0][1] - data[0][2];
-            System.out.println(s1x+"|"+slx+"|"+srx+"|"+(slx-srx));
+            //length of left
+            slx = data[0][3] - data[0][0];
+            srx = data[0][1] - data[0][2];
+            System.out.println("\n\n\n--------\n"+"("+data[0][0]+","+data[1][0]+")"+
+                                "("+data[0][1]+","+data[1][1]+")"+
+                                "("+data[0][2]+","+data[1][2]+")"+
+                                "("+data[0][3]+","+data[1][3]+")");
+            System.out.println(s1x+"|"+slx+"|"+srx+"|"+(slx-srx)+"\n-------");
         }
-        return 0;
+        if(Math.abs(slx - srx) < 3){
+            return 0;
+        }
+        return (srx-slx);
     }
     public static double getDistanceToTarget(){
         if(!Limelight.hasAnyTarget())return 0;
