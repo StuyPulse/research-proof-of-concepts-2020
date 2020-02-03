@@ -34,9 +34,9 @@ public class CVFuncs {
                                 "("+data[0][3]+","+data[1][3]+")");
             System.out.println(s1x+"|"+slx+"|"+srx+"|"+(slx-srx)+"\n-------");
         }
-        if(Math.abs(slx - srx) < 3){
-            return 0;
-        }
+        // if(Math.abs(slx - srx) < 1.5){
+        //     return 0;
+        // }
         return (srx-slx);
     }
     public static double getDistanceToTarget(){

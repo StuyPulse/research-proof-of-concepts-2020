@@ -27,6 +27,8 @@ public class DriveCommand extends CommandBase {
    */
   PIDController turnController;
   PIDController moveController;
+  double offset = 0;
+  boolean pressed = false;
   public DriveCommand() {
     addRequirements(Robot.m_robotContainer.m_drivetrain);
   }
@@ -56,7 +58,18 @@ public class DriveCommand extends CommandBase {
         Robot.m_robotContainer.getTurn()
       );
     }else{
-      double turn = -turnController.calculate(Limelight.getTargetXAngle());
+      if(Robot.m_robotContainer.controller.getRawButton(2)){
+        if(!pressed){
+          offset = CVFuncs.txOffset();
+        }
+        pressed = true;
+      }else{
+        if(pressed){
+          offset = 0;
+          pressed = false;
+        }
+      }
+      double turn = -turnController.calculate(Limelight.getTargetXAngle()+offset);
       double move = moveController.calculate(CVFuncs.getDistanceToTarget());
     
       // System.out.println(turn);
