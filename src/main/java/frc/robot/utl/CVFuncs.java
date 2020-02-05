@@ -49,6 +49,7 @@ public class CVFuncs {
         return goal_height / Math.tan(Math.toRadians(goal_pitch)) - 120;
     }
 	public static Mat[] estimatePose() {
+        System.loadLibrary("opencv_java347");
 		List<Point3> objectPointsList = new ArrayList<Point3>();
 		objectPointsList.add(new Point3(-19.625, 0, 0));
 		objectPointsList.add(new Point3(19.625, 0, 0));
@@ -93,11 +94,7 @@ public class CVFuncs {
         return xyz;
     }
     
-//    public MatOfPoint2f data(){
-//        Calib3d.solvePnP(objPointsMat, this, camMatrix, distCoeffs, Rvec, Tvec);
-//    }
-    
-    // public static void main(String[] args) { // Test client
-    // 	estimatePose();
-    // }
+    public static void main(String[] args) { // Test client
+        getXYZ();
+    }
 }
