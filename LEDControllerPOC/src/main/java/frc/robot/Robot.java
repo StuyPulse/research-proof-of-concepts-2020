@@ -88,7 +88,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    controller.setColor(LEDController.Color.RAINBOW);
+    controller.setColor(LEDController.Color.YELLOW);
+    controller.setValue(-0.87);
   }
 
   /**
