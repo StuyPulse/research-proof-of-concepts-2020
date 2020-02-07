@@ -49,7 +49,8 @@ public class Drivetrain extends SubsystemBase {
     differentialDrive.arcadeDrive(fwd, rot);
   }
   public void cvtLimelightToCV(){
-    CVFuncs.txOffset();
+    // CVFuncs.txOffset();
+    CVFuncs.getTranslation();
     // double[][] data = Limelight.getVertices();
     // if(data.length > 3){
     //   for(int i = 0; i < 4; i++){
