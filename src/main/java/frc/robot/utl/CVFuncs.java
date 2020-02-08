@@ -126,6 +126,24 @@ public class CVFuncs {
             xyz[0] = data[1].get(0, 0)[0];
             xyz[1] = data[1].get(1, 0)[0];
             xyz[2] = data[1].get(2, 0)[0];
+            System.out.println("T: " + (Math.sqrt(Math.pow(xyz[0], 2) + Math.pow(xyz[2], 2))));
+            // System.out.println((1.706 * xyz[0])+","+(1.706 * xyz[1])+","+(1.706 * xyz[2]));
+        }
+        return xyz;
+    }
+
+    public static double[] getRotation(){
+        Mat[] data = estimatePose();
+        double[] xyz = new double[3];
+        if(data != null){
+            // System.out.println(stuff[2].get(2,0).length);
+
+            xyz[0] = data[0].get(0, 0)[0];
+            xyz[1] = data[0].get(1, 0)[0];
+            xyz[2] = data[0].get(2, 0)[0];
+            // System.out.println("R: " + 1.44 * (Math.sqrt(Math.pow(xyz[0], 2) + Math.pow(xyz[2], 2))));
+            System.out.println("R: "+xyz[0]+","+xyz[1]+","+xyz[2]);
+            System.out.println("R: "+(180/Math.PI * xyz[0])+","+(180/Math.PI * xyz[1])+","+(180/Math.PI * xyz[2]));
         }
         return xyz;
     }
